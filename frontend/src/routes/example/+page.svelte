@@ -9,6 +9,7 @@
 <section>
   <h1>example</h1>
   hoge
+  deploy update test
 </section>
 
 <style>
