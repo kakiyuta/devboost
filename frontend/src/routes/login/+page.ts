@@ -1,3 +1,3 @@
-export async function load() {
-    console.log('login page loaded!');
-}
+export const ssr = false;
+
+export async function load() {}

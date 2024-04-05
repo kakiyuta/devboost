@@ -1,25 +1,44 @@
-<script>
+<script lang="ts">
     import { Button } from 'flowbite-svelte';
     import { ArrowRightOutline } from 'flowbite-svelte-icons';
-    import { authService } from '$lib/auth/authService';
-    import { onMount } from 'svelte';
-    import { authClient } from '../../store';
-    import { get } from 'svelte/store';
+    import { User } from '@auth0/auth0-spa-js';
+    import { withAuth } from '$lib/auth';
+    const auth = withAuth();
 
-    onMount(async () => {
-        const client = await authService.init();
-        authClient.set(client);
-        authService.hgoe();
+    let user: User;
+    let token: string;
+    auth.user.subscribe((value) => {
+        if (value) {
+            user = value;
+        }
     });
-
-    const login = async () => {
-        await authService.login(get(authClient));
-    };
+    auth.token.subscribe((value) => {
+        if (value) {
+            token = value;
+        }
+    });
 </script>
 
 <div class="flex p-8">
-    login
-    <Button on:click={login}>
-        Choose Plan <ArrowRightOutline class="ms-2 h-3.5 w-3.5" />
-    </Button>
+    {#if !user}
+        <Button on:click={auth.login}>
+            Login <ArrowRightOutline class="ms-2 h-3.5 w-3.5" />
+        </Button>
+    {:else}
+        <Button class="ml-5" on:click={auth.logout}>
+            Logout <ArrowRightOutline class="ms-2 h-3.5 w-3.5" />
+        </Button>
+
+        <h1>Hello {user.nickname}</h1>
+        <div class="profile">
+            <img class="profile" src={user.picture} alt="User profile" />
+        </div>
+        <p>User:</p>
+        <pre>
+            {JSON.stringify(user, null, 2)}
+        </pre>
+        <pre>
+            {token}
+        </pre>
+    {/if}
 </div>
