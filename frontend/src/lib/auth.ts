@@ -49,12 +49,18 @@ async function getUser(): Promise<void> {
     }
 }
 
-getUser();
+async function isAuthenticated(): Promise<boolean> {
+    const client = await createClient();
+    return client.isAuthenticated();
+}
+
 export function withAuth(): {
     login: () => Promise<void>;
     logout: () => Promise<void>;
     user: Writable<User | undefined>;
     token: Writable<string>;
+    getUser: () => Promise<void>;
+    isAuthenticated: () => Promise<boolean>;
 } {
-    return { login, logout, user, token };
+    return { login, logout, user, token, getUser, isAuthenticated };
 }
