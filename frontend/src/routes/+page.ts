@@ -8,7 +8,7 @@ export async function load() {
     const auth = withAuth();
     await auth.getUser();
     const user = get(auth.user);
-    if (!user) {
-        goto('/login');
+    if (user) {
+        goto('/dashbord');
     }
 }
